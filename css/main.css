@@ -1,0 +1,127 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+html, body {
+  height: 100%;
+  font-family: 'Open Sans', sans-serif;
+}
+.text-center {
+    text-align: center;
+}
+header {
+    padding: 20px 5px;
+}
+h1, h2, h3 {
+    text-align: center;
+}
+h1 {
+    color: #CFC4A6;
+    font-size: 70px;
+    padding: 20px 0 10px 0;
+}
+h2, h3 {
+    color: #9FA736;
+}
+.page-wrap {
+    background: #3A5671;
+    /* needed for sticky footer */
+  min-height: 100%;
+  /* equal to footer height */
+  margin-bottom: -142px; 
+}
+.page-wrap:after {
+  content: "";
+  display: block;
+}
+.site-footer, .page-wrap:after {
+  height: 142px; 
+}
+.site-footer {
+    clear: right;
+  background: #B1B986;
+  text-align: center;
+}
+.site-footer {
+    padding-top: 20px;
+}
+.trademarkDescription {
+    color: #D94A2A;
+    font-size: 12px;
+}
+.scoreSection {
+    height: 90px;
+}
+.mainForm {
+    padding: 25px;
+    text-align: center;
+}
+.mainForm input {
+    background: transparent;
+    border: 1px solid #9FA736;
+    border-radius: 5px;
+    display: block;
+    font-size: 18px;
+    width: 500px;
+    height: 40px;
+    padding: 0 10px;
+    color: #B1B986;
+    margin: 0 auto;
+}
+
+.mainForm button {
+    background: transparent;
+    color: #9FA736;
+    padding: 5px 15px;
+    font-size: 26px;
+    border: 1px solid #9FA736;
+    border-radius: 5px;
+    margin: 20px;
+}
+.questionImage {
+    width: 300px;
+    border-radius: 5px;
+    margin: 0 auto;
+}
+#answerChoiceList, #rankingList {
+    text-align: center;
+    margin-bottom: 15px;
+}
+#answerChoiceList button, #nextButtonList button, #rankingList button {
+    background: transparent;
+    font-size: 24px;
+    color: #B1B986;
+    border: 1px solid #9FA736;
+    border-radius: 5px;
+    padding: 5px 15px;
+    margin: 10px auto;
+    width: 300px;
+}
+#nextButtonList button {
+    color: #3A5671;
+    background: #B1B986;
+    margin: 40px 20px 40px 0;
+    float: right;
+}
+#rankingList button {
+    background: #D94A2A;
+    color: #B1B986;
+}
+section {
+    text-align: center;
+}
+.scoreSection {
+    padding: 0 8px;
+}
+#explanation {
+    padding: 15px 10px;
+}
+/* ======================================= small screens =================================================== */
+@media(max-width: 600px) {
+    h1 {
+        font-size: 45px;
+    }
+    .mainForm input {
+        width: 300px;
+    }
+}
