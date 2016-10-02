@@ -103,9 +103,20 @@ h2, h3 {
     margin: 40px 20px 40px 0;
     float: right;
 }
+.quitButtonClass {
+    margin: 10px auto !important;
+    width: 300px !important;
+    list-style: none;
+}
+#quitButton {
+    float: none !important;
+    background: #D94A2A !important;
+    color: #B1B986 !important;
+}
 #rankingList button {
-    background: #D94A2A;
-    color: #B1B986;
+    background: transparent;
+    color: #9FA736;
+    border: 1px solid #9FA736;
 }
 section {
     text-align: center;
@@ -115,6 +126,12 @@ section {
 }
 #explanation {
     padding: 15px 10px;
+}
+#explanationHelper {
+    margin-top: 30px;
+}
+.disabledButton {
+    opacity: 0.5;
 }
 /* ======================================= small screens =================================================== */
 @media(max-width: 600px) {

@@ -47,7 +47,7 @@ const questions = [
     {
         question: "How many planets are in our solar system?",
         answerChoices: [{answer: '8', correct: true}, {answer: '10', correct: false}, {answer: '9', correct: false}, {answer: '6', correct: false}],
-        explanation: 'There are 8 planets in our solar system, they are: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune. The 9th planet (Pluto) is a "dwarth planet", it is not included into the list of "real planeets".',
+        explanation: 'There are 8 planets in our solar system, they are: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune. The 9th planet (Pluto) is a "dwarth planet", it is not included into the list of "real planets".',
         explanationImage: 'img/planet-overview.jpg',
         userAnswered: ''
     },
@@ -87,7 +87,7 @@ const questions = [
         userAnswered: ''
     },
     {
-        question: "How long does it take light to get from Sun to Earth?",
+        question: "How long does it take light to travel from Sun to Earth?",
         answerChoices: [{answer: '8 minutes and 20 seconds', correct: true}, {answer: 'less then 1 second', correct: false}, {answer: '1 light year', correct: false}, {answer: '24 hours', correct: false}],
         explanation: 'Sunlight travels at the speed of light. Photons emitted from the surface of the Sun need to travel across the vacuum of space to reach our eyes. The short answer is that it takes sunlight an average of 8 minutes and 20 seconds to travel from the Sun to the Earth.',
         explanationImage: 'img/time-for-light-to-travel.jpg',
@@ -114,26 +114,34 @@ planets.forEach( ({name, description, image}) => {
         }
     );
 });
-
 // Set default homepage header
-let mainHeader = 'Astronomy Quiz';
-document.getElementById('mainHeader').textContent = mainHeader;
+let mainHeader = '';
 // Set default homepage subheader
-let headerDescription = 'Test your astronomy knowledge';
-document.getElementById('headerDescription').textContent = headerDescription;
+let headerDescription = '';
 // Set default homepage header 3
-let headerSecondaryDescription = 'Type in your name to get started';
-document.getElementById('headerSecondaryDescription').textContent = headerSecondaryDescription;
-// Display username form on the homepage
-const homePage = (`
-    <form class="mainForm">
-        <input id="username" placeholder="Name"/>
-        <button type="button" onclick="startTest()">Start</button>
-        <p id="homePageMessage"></p>
-    </form>
-`);
-// when page loads display the username form in the main section of the page
-document.getElementById('mainSection').innerHTML = homePage;
+let headerSecondaryDescription = '';
+function getHomePage() {
+    // Set default homepage header
+    let mainHeader = 'Astronomy Quiz';
+    document.getElementById('mainHeader').textContent = mainHeader;
+    // Set default homepage subheader
+    let headerDescription = 'Test your astronomy knowledge';
+    document.getElementById('headerDescription').textContent = headerDescription;
+    // Set default homepage header 3
+    let headerSecondaryDescription = 'Type in your name to get started';
+    document.getElementById('headerSecondaryDescription').textContent = headerSecondaryDescription;
+    // Display username form on the homepage
+    const homePage = (`
+        <form class="mainForm">
+            <input id="username" placeholder="Name"/>
+            <button type="button" onclick="startTest()">Start</button>
+            <p id="homePageMessage"></p>
+        </form>
+    `);
+    // when page loads display the username form in the main section of the page
+    document.getElementById('mainSection').innerHTML = homePage;
+}
+getHomePage();
 // this function will validate the user's name and start the test
 function startTest() {
     // get the username value from input
@@ -157,6 +165,8 @@ let globalQuestion = {};
 // create a global var for the name of the user
 let globalName;
 function getTestQuestion() {
+    // clear explanation image
+    document.getElementById('explanationHelper').innerHTML = '';
     // clear question explanation section
     document.getElementById('explanation').innerHTML = '';
     // clear helper section
@@ -199,7 +209,7 @@ function getTestQuestion() {
                 </div>
                 <form class="mainForm">
                     <input id="userAnswer" placeholder="${question}"/>
-                    <button type="button" onclick="submitAnswer()">Submit</button>
+                    <button type="button" class="ansButton" onclick="submitAnswer()">Submit</button>
                     <p id="homePageMessage"></p>
                 </form>
             `)
@@ -250,6 +260,14 @@ function submitAnswer(answer = null) {
     }
 }
 function checkAnswer(userAnswer) {
+    // disable all answer buttons after the answer has been submitted
+    // first use spread operator to turn HTMLCollection into an array
+    let answerButtons = [...document.getElementsByClassName('ansButton')];
+
+    answerButtons.forEach(button => {
+        button.disabled = true;
+        button.className += " disabledButton";
+    });
     // attempt to locate the userAnswer in the answerChoices array
     const ans = globalQuestion.answerChoices.find(answerChoice => answerChoice.answer.toLowerCase() === userAnswer.toLowerCase());
     // if answer was in answerChoices array and answer was correct set it to 'correct' else incorrect
@@ -268,6 +286,13 @@ function checkAnswer(userAnswer) {
         const correctAnswer = question.answerChoices.find(answer => answer.correct === true);
         // message if answered wrong
         displayMessage("mainHelper", `Incorrect! The correct answer was ${correctAnswer.answer}`, "#D94A2A", "900");
+    }
+    if (question.explanationImage) {
+        document.getElementById('explanationHelper').innerHTML = (`
+            <div class="text-center">
+                <img class="questionImage" src="${question.explanationImage}" alt="${question.explanationImage}" />
+            </div>
+        `)
     }
     // display the explanation
     displayMessage("explanation", question.explanation, "#B1B986", "200");
@@ -318,15 +343,29 @@ function appendListItems(location, array) {
         button.innerHTML = answer;
         li.appendChild(button);
         // if array length is 1, we know it is the next button
-        if (array.length == 1) {
+        if (array.length == 1 && array[0].correct !== 'quit') {
             // get next question when pressed
             button.addEventListener("click", function() {
                 getTestQuestion();
             });
         // if only one button in array and it is the quit button
         } else if (array.length == 1 && array[0].correct === 'quit') {
+            // add an id and a class to center the quit button
+            button.setAttribute("id", "quitButton");
+            document.getElementById('nextButtonList').className = "quitButtonClass";
             button.addEventListener("click", function() {
-                location.reload();
+                // reset the planet objects so they do not have any user answers
+                questions.forEach( question => question.userAnswered = "");
+                // current question is now empty
+                globalQuestion = {};
+                // global var for the name of the user is now empty string
+                globalName = '';
+                // clear explanation
+                document.getElementById('explanation').innerHTML = "";
+                // clear nextButtonSection
+                document.getElementById('nextButtonList').innerHTML = "";
+                // get the homepage
+                getHomePage();
             });
         } else if (array.length > 1 && typeof correct === 'string') {
             // if correct is of type string, we know this are ranking buttons
@@ -334,6 +373,8 @@ function appendListItems(location, array) {
                 giveRating(correct);
             });
         } else {
+            //
+            button.setAttribute('class', 'ansButton');
             // if array contains answer choices, we will check the answer pressed
             button.addEventListener("click", function() {
                 submitAnswer(answer);
